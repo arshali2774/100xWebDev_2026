@@ -6,12 +6,12 @@ const output = Object.fromEntries(
 
 console.log(output)
 
-// simple
+// simple approach.
 
 const output2 = {};
 
 for (const [key, value] of Object.entries(input)) {
   if (value > 50) output2[key] = value;
 }
-
+console.log("Hello World")
 console.log(output2)
