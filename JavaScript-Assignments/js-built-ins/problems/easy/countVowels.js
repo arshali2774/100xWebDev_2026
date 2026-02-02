@@ -27,9 +27,44 @@
 
 function countVowels(str) {
   // Your code here
+  if (str.length === 0) {
+    return 0;
+  }
+  let countVowel = 0;
+  const vowels = new Set(["a", "e", "i", "o", "u"]);
+  for (const ch of str.toLowerCase()) {
+    if (vowels.has(ch)) countVowel++;
+  }
+  return countVowel;
 }
 
 module.exports = { countVowels };
 
-
-
+// using includes
+// let count = 0;
+// const vowels = "aeiou";
+// for (const ch of str.toLowerCase()) {
+//   if (vowels.includes(ch)) {
+//     count++;
+//   }
+// }
+// my way below
+function countVowelsMYLOGIC(str) {
+  // Your code here
+  if (str.length === 0) {
+    return 0;
+  }
+  let countVowel = 0;
+  for (const ch of str) {
+    if (
+      ch.toLowerCase() === "a" ||
+      ch.toLowerCase() === "e" ||
+      ch.toLowerCase() === "i" ||
+      ch.toLowerCase() === "o" ||
+      ch.toLowerCase() === "u"
+    ) {
+      ++countVowel;
+    }
+  }
+  return countVowel;
+}
