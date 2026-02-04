@@ -27,6 +27,27 @@
 
 function isPerfectNumber(num) {
   // Your code here
+  // my approach
+  // let arr = [];
+  // for (let i = 1; i < num; i++) {
+  //   if (num % i === 0) {
+  //     arr.push(i);
+  //   }
+  // }
+  // let sum = arr.reduce((acc, curr) => acc + curr, 0);
+  // if (sum === num) return true;
+  // else return false;
+  if (num <= 1) return false;
+  let sum = 1; // 1 is a proper divisor of any num > 1
+  // we only need to sqrt of num
+  for (let i = 2; i * i <= num; i++) {
+    if (num % i === 0) {
+      sum += i;
+      const other = num / i;
+      if (other !== i) sum += other;
+    }
+  }
+  return sum === num;
 }
 
 module.exports = { isPerfectNumber };

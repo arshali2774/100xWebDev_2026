@@ -22,7 +22,18 @@
 */
 
 function reverseInteger(num) {
-  // Your code here
+  // Handle negative numbers by storing the sign
+  const isNegative = num < 0;
+  num = Math.abs(num);
+
+  let revNum = 0;
+  while (num > 0) {
+    let rem = num % 10;
+    revNum = revNum * 10 + rem;
+    num = Math.floor(num / 10); // Use Math.floor for integer division
+  }
+
+  return isNegative ? -revNum : revNum;
 }
 
 module.exports = reverseInteger;
