@@ -17,6 +17,154 @@
   - `npm run test-calculator`
 */
 
-class Calculator { }
+class Calculator {
+  constructor() {
+    this.result = 0;
+  }
+
+  add(num) {
+    this.result += num;
+  }
+
+  subtract(num) {
+    this.result -= num;
+  }
+
+  multiply(num) {
+    this.result *= num;
+  }
+
+  divide(num) {
+    if (num === 0) {
+      throw new Error("Division by zero");
+    }
+    this.result /= num;
+  }
+
+  clear() {
+    this.result = 0;
+  }
+
+  getResult() {
+    return this.result;
+  }
+
+  calculate(expression) {
+    const parser = new ExpressionParser(expression);
+    this.result = parser.parse();
+    return this.result;
+  }
+}
+
+class ExpressionParser {
+  constructor(input) {
+    this.input = input;
+    this.index = 0;
+  }
+
+  parse() {
+    const value = this.parseExpression();
+    this.skipSpaces();
+    if (this.index < this.input.length) {
+      throw new Error("Invalid expression");
+    }
+    return value;
+  }
+
+  parseExpression() {
+    let value = this.parseTerm();
+    while (true) {
+      this.skipSpaces();
+      const char = this.peek();
+      if (char === "+" || char === "-") {
+        this.index += 1;
+        const rhs = this.parseTerm();
+        value = char === "+" ? value + rhs : value - rhs;
+      } else {
+        break;
+      }
+    }
+    return value;
+  }
+
+  parseTerm() {
+    let value = this.parseFactor();
+    while (true) {
+      this.skipSpaces();
+      const char = this.peek();
+      if (char === "*" || char === "/") {
+        this.index += 1;
+        const rhs = this.parseFactor();
+        if (char === "/" && rhs === 0) {
+          throw new Error("Division by zero");
+        }
+        value = char === "*" ? value * rhs : value / rhs;
+      } else {
+        break;
+      }
+    }
+    return value;
+  }
+
+  parseFactor() {
+    this.skipSpaces();
+    const char = this.peek();
+
+    if (char === "+" || char === "-") {
+      this.index += 1;
+      const value = this.parseFactor();
+      return char === "-" ? -value : value;
+    }
+
+    if (char === "(") {
+      this.index += 1;
+      const value = this.parseExpression();
+      this.skipSpaces();
+      if (this.peek() !== ")") {
+        throw new Error("Invalid expression");
+      }
+      this.index += 1;
+      return value;
+    }
+
+    return this.parseNumber();
+  }
+
+  parseNumber() {
+    this.skipSpaces();
+    let start = this.index;
+    let hasDigit = false;
+    let hasDot = false;
+
+    while (this.index < this.input.length) {
+      const char = this.input[this.index];
+      if (char >= "0" && char <= "9") {
+        hasDigit = true;
+        this.index += 1;
+      } else if (char === "." && !hasDot) {
+        hasDot = true;
+        this.index += 1;
+      } else {
+        break;
+      }
+    }
+
+    if (!hasDigit) {
+      throw new Error("Invalid expression");
+    }
+
+    return Number(this.input.slice(start, this.index));
+  }
+
+  skipSpaces() {
+    while (this.index < this.input.length && this.input[this.index] === " ") {
+      this.index += 1;
+    }
+  }
+
+  peek() {
+    return this.index < this.input.length ? this.input[this.index] : "";
+  }
+}
 
 module.exports = Calculator;
